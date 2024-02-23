@@ -1,10 +1,10 @@
 # :file_folder: FileDroplet
 
-一个极简、快速、安全的文件分享和图片托管平台。:rocket:
+一个极简、快速、安全的文件分享和图片托管平台。 :rocket:
 
 ## :construction: 正在开发中
 
-该项目目前正在开发中。敬请期待更新！:construction_worker:
+该项目目前正在开发中。敬请期待更新！ :construction_worker:
 
 ## :page_facing_up: 介绍
 
