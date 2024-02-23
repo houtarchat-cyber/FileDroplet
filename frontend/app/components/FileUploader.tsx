@@ -1,8 +1,8 @@
 'use client';
 
-import {Button} from "@/app/components/ui/button";
-import {CardContent, Card} from "@/app/components/ui/card"
-import React, {JSX, SVGProps, useState} from "react";
+import { Button } from "@/app/components/ui/button";
+import { CardContent, Card } from "@/app/components/ui/card"
+import React, { JSX, SVGProps, useState } from "react";
 
 export default function FileUploader() {
   const [files, setFiles] = useState<File[]>([]);
@@ -33,7 +33,7 @@ export default function FileUploader() {
         <div className="flex flex-col items-center space-y-2 p-4 md:p-24 lg:p-48" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
           <FileIcon className="w-12 h-12" />
           <span className="font-semibold text-sm text-gray-500 dark:text-gray-400">Drag and drop your files</span>
-          <input type="file" multiple onChange={handleFileChange} style={{display: 'none'}} id="file-input" />
+          <input type="file" multiple onChange={handleFileChange} style={{ display: 'none' }} id="file-input" />
           <label htmlFor="file-input">
             <Button size="sm" onClick={
               () => document.getElementById('file-input')?.click()
