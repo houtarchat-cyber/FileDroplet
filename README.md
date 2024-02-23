@@ -1,5 +1,7 @@
 # :file_folder: FileDroplet
 
+[中文](README_CN.md)
+
 A minimalist, fast, and secure file sharing and image hosting platform. :rocket:
 
 ## :construction: Work in Progress
