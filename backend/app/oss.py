@@ -4,8 +4,8 @@ import hmac
 import json
 import os
 import time
-from hashlib import sha1
 import uuid
+from hashlib import sha1
 
 from dotenv import load_dotenv
 
