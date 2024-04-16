@@ -1,16 +1,17 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from . import models, schemas
 
 
 def get_file(db: Session, file_id: int):
-    return db.query(models.File).filter(models.File.id == file_id).first()
+    return db.query(models.File).get(file_id)
 
 
 def create_file(db: Session, file: schemas.FileCreate):
     db_file = models.File(
         file_name=file.file_name,
         url=file.url,
+        size=file.size,
         description=file.description,
         expiration=file.expiration,
         manage_password=file.manage_password,
@@ -22,9 +23,56 @@ def create_file(db: Session, file: schemas.FileCreate):
     return db_file
 
 
+def update_file(db: Session, file_id: int, file: schemas.FileCreate):
+    db_file = db.query(models.File).get(file_id)
+    db_file.file_name = file.file_name
+    db_file.url = file.url
+    db_file.size = file.size
+    db_file.description = file.description
+    db_file.expiration = file.expiration
+    db_file.manage_password = file.manage_password
+    db_file.access_password = file.access_password
+    db.commit()
+    db.refresh(db_file)
+    return db_file
+
+
 def delete_file(db: Session, file_id: int):
-    db_file = db.query(models.File).filter(models.File.id == file_id).first()
+    db_file = db.query(models.File).get(file_id)
     db.delete(db_file)
+    db.commit()
+
+
+def get_collection(db: Session, collection_id: int):
+    return db.query(models.Collection).options(joinedload(models.Collection.files)).get(collection_id)
+
+
+def create_collection(db: Session, collection: schemas.CollectionCreate, files: list[models.File]):
+    db_collection = models.Collection(
+        access_password=collection.access_password,
+        files=files,
+    )
+    db.add(db_collection)
+    db.commit()
+    db.refresh(db_collection)
+    return db_collection
+
+
+def update_collection(db: Session, collection_id: int, collection: schemas.CollectionCreate, files: list[models.File]):
+    db_collection = db.query(models.Collection).get(collection_id)
+    db_collection.collection_name = collection.collection_name
+    db_collection.description = collection.description
+    db_collection.manage_password = collection.manage_password
+    db_collection.access_password = collection.access_password
+    db_collection.files = files
+    db.commit()
+    db.refresh(db_collection)
+    return db_collection
+
+
+def delete_collection(db: Session, collection_id: int):
+    db_collection = db.query(models.Collection).get(collection_id)
+    db.delete(db_collection)
     db.commit()
 
 

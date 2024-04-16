@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class FileBase(BaseModel):
     file_name: str
     url: str
+    size: int = 0
     description: str = ""
     expiration: int = 0
 
@@ -17,11 +18,45 @@ class FileAccess(FileBase):
 
 
 class FileCreate(FileAccess):
-    url: str
+    pass
 
 
 class File(FileBase):
     id: int
+
+
+class FileSummary(BaseModel):
+    id: int
+    file_name: str
+    size: int
+
+    class Config:
+        from_attributes = True
+
+
+class CollectionBase(BaseModel):
+
+    class Config:
+        from_attributes = True
+
+
+class CollectionAccess(CollectionBase):
+    access_password: str = ""
+
+    class Config:
+        from_attributes = True
+
+
+class CollectionCreate(CollectionAccess):
+    files: list[int] = []
+
+
+class Collection(CollectionBase):
+    id: int
+    files: list[FileSummary] = []
+
+    class Config:
+        from_attributes = True
 
 
 class OssSignature(BaseModel):
