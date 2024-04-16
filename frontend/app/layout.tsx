@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "FileDroplet",
-  description: "A minimalist, fast, and secure file sharing and image hosting platform.",
+  description: "一个极简、快速和安全的文件分享和图片托管平台。",
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh">
       <body className={inter.className}>{children}</body>
     </html>
   );
