@@ -18,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { UploadCloud, Trash, Upload, Loader2 } from "lucide-react"
+import { Turnstile } from "@marsidev/react-turnstile"
 import { getFileIcon } from "@/lib/utils2";
 import React, { useEffect, useRef, useState } from "react";
 import { uploadCollection, uploadFile, fileSize } from "@/lib/utils";
@@ -33,6 +34,7 @@ export default function FileUploader() {
   const [uploadIndex, setUploadIndex] = useState(0);
   const [uploadProgress, setUploadProgress] = useState(-1);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [fileIds, setFileIds] = useState<number[]>([]);
   const [filesInfo, setFilesInfo] = useState<{
     [index: number]: {
@@ -70,9 +72,11 @@ export default function FileUploader() {
   }
 
   const handleUpload = (filesInfoP: typeof filesInfo) => {
+    if (files.length === 0) return;
+    if (turnstileToken === null) return;
     setUploadProgress(0);
     Promise.all(files.map(async (file, index) => {
-      const id = await uploadFile(file, filesInfoP[index].name, file.size, filesInfoP[index].description, filesInfoP[index].expire, filesInfoP[index].password);
+      const id = await uploadFile(file, filesInfoP[index].name, file.size, filesInfoP[index].description, filesInfoP[index].expire, filesInfoP[index].password, turnstileToken);
       fileIds[index] = id;
       setFileIds(fileIds);
       dispatch(addFile({ id, name: filesInfoP[index].name, size: file.size, password: filesInfoP[index].password }));
@@ -226,12 +230,17 @@ export default function FileUploader() {
                   </Button>
                 )}
                 {uploadIndex === files.length - 1 && (
-                  <Button
-                    size="sm"
-                    onClick={() => handlePagination('upload')}
-                  >
+                  <>
+                    <Turnstile siteKey="0x4AAAAAAAXsCSm8dUb-JlES" onSuccess={
+                      (token) => setTurnstileToken(token)
+                    } />
+                    <Button
+                      size="sm"
+                      onClick={() => handlePagination('upload')}
+                    >
                     上传
-                  </Button>
+                    </Button>
+                  </>
                 )}
               </div>
             </div>

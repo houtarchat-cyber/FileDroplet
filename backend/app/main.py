@@ -1,5 +1,8 @@
+import os
 import time
 
+import requests
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -19,6 +22,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+load_dotenv()
+turnstile_secret = os.getenv("TURNSTILE_SECRET")
 
 # Dependency
 def get_db():
@@ -149,7 +154,19 @@ def read_collection(
 
 
 @app.get("/api/oss/signature", response_model=schemas.OssSignature)
-def get_oss_signature():
+def get_oss_signature(turnstile_token: str = None):
+    if not turnstile_token:
+        raise HTTPException(status_code=403, detail="Missing turnstile token")
+    response = requests.post(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        data={
+            "secret": turnstile_secret,
+            "response": turnstile_token,
+        },
+    )
+    if not response.json()["success"]:
+        raise HTTPException(status_code=403, detail=response.json()["error-codes"])
+    
     return generate_signature()
 
 

@@ -15,8 +15,8 @@ export function getBackendUrl(path: string) {
   return store.getState().settings.backendUrl + path;
 }
 
-export async function uploadFile(file: File, name: string, size: number, description: string, expire: string, password: string) {
-  const signature = await fetch(getBackendUrl('/api/oss/signature')).then(res => res.json());
+export async function uploadFile(file: File, name: string, size: number, description: string, expire: string, password: string, turnstileToken: string) {
+  const signature = await fetch(getBackendUrl('/api/oss/signature?turnstile_token=' + turnstileToken)).then(res => res.json());
   const formData = new FormData();
   formData.append('key', signature.dir + signature.key + file.name);
   formData.append('policy', signature.policy);
