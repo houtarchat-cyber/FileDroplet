@@ -36,7 +36,7 @@ export async function uploadFile(file: File, name: string, size: number, descrip
     size: size,
     url: `${signature.host}/${signature.dir}${signature.key}${file.name}`,
     description,
-    expiration: expire ? new Date(expire).getTime() : 0,
+    expiration: expire ? Math.floor(new Date(expire).getTime() / 1000) : 0,
     access_password: password,
   };
   const saveFile: () => Promise<number> = async () => {
