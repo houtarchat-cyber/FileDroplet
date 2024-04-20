@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 interface Collection {
   id: string
-  name: string
+  password: string
   files: string[]
 }
 
