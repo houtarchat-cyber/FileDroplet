@@ -237,6 +237,7 @@ export default function FileUploader() {
                     <Button
                       size="sm"
                       onClick={() => handlePagination('upload')}
+                      disabled={turnstileToken === null}
                     >
                     上传
                     </Button>
