@@ -1,6 +1,8 @@
-import { File, FileArchive, FileAudio, FileCode, FileImage, FilePieChart, FileSpreadsheet, FileText, FileType, FileVideo } from "lucide-react";
+import { File, FileArchive, FileAudio, FileCode, FileImage, FilePieChart, FileSpreadsheet, FileText, FileType, FileVideo, Scroll } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState, useEffect } from "react";
 import { Document, Page } from 'react-pdf';
 
 export const getFileIcon = (fileName: string, size?: string) => {
@@ -102,6 +104,22 @@ const RcDPlayer = dynamic(
   }
 );
 
+function FileContent({ url }: { url: string }) {
+  const [content, setContent] = useState('');
+  useEffect(() => {
+    fetch(url).then(res => res.text()).then(content => {
+      setContent(content);
+    });
+  }, [url]);
+  return (
+    <ScrollArea style={{ width: '100%', height: '50vh', overflowY: 'auto' }}>
+      <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+        {content}
+      </div>
+    </ScrollArea>
+  );
+}
+
 export function PreviewFile({ url }: { url: string }) {
   const ext = new URL(url).pathname.split('.').pop()?.toLowerCase();
   switch (ext) {
@@ -122,11 +140,18 @@ export function PreviewFile({ url }: { url: string }) {
   case 'bmp':
   case 'gif':
   case 'ico':
+  case 'webp':
+  case 'svg':
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={url} className="max-h-[75%] m-auto" alt="" />
   case 'txt':
   case 'html':
-    return <object type="text/plain" data={url} className="w-full h-full" />
+  case 'css':
+  case 'js':
+  case 'json':
+  case 'xml':
+  case 'md':
+    return <FileContent url={url} />
   case '3gp':
   case 'mp4':
   case 'webm':
