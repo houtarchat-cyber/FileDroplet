@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useState } from "react";
 import { getFileIcon } from "@/lib/utils2";
 import { Eye } from "lucide-react";
-import { fileSize } from "@/lib/utils";
+import { fileSize, getBackendUrl } from "@/lib/utils";
 
 
 export default function CollectionViewer() {
@@ -23,7 +23,7 @@ export default function CollectionViewer() {
 
   const getCollectionInformation = async () => {
     const collectionId = window.location.hash.split("/")[2]
-    const response = await fetch(`http://localhost:3758/api/collections/${collectionId}`, {
+    const response = await fetch(getBackendUrl("/api/collections/" + collectionId), {
       headers: {
         "Access-Password": auth.authCode
       },

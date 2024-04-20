@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
 import { Send } from 'lucide-react';
+import { getBackendUrl } from '@/lib/utils';
 
 const FeedbackPage = () => {
   const [feedback, setFeedback] = useState({
@@ -17,7 +18,7 @@ const FeedbackPage = () => {
 
   const handleSubmit = (e: {preventDefault: () => void;}) => {
     e.preventDefault();
-    fetch('http://localhost:3758/api/feedback', {
+    fetch(getBackendUrl('/api/feedback'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
