@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ImageUp, Loader2, ClipboardCopy } from "lucide-react"
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { uploadImage } from "@/lib/utils";
 
 
@@ -19,6 +19,8 @@ export default function ImageUploader() {
   const [uploading, setUploading] = useState(false);
   const [uploadResult, setUploadResult] = useState('');
   const [fileName, setFileName] = useState('');
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -65,10 +67,10 @@ export default function ImageUploader() {
         <div className="flex flex-col items-center space-y-2 p-4 md:p-24 lg:p-48" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
           <ImageUp className="w-12 h-12" />
           <span className="font-semibold text-sm text-gray-500 dark:text-gray-400">拖放文件到此处 或 粘贴剪贴板中的图片</span>
-          <Input type="file" multiple onChange={handleFileChange} style={{ display: 'none' }} id="file-input" />
+          <Input type="file" multiple onChange={handleFileChange} style={{ display: 'none' }} id="file-input" ref={fileInputRef} />
           <Label htmlFor="file-input">
             <Button size="sm" onClick={
-              () => document.getElementById('file-input')?.click()
+              () => fileInputRef.current?.click()
             }>选择文件</Button>
           </Label>
         </div>
