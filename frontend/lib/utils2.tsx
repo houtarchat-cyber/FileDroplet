@@ -1,16 +1,16 @@
-import { JolPlayer } from "jol-player";
 import { File, FileArchive, FileAudio, FileCode, FileImage, FilePieChart, FileSpreadsheet, FileText, FileType, FileVideo } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Document, Page } from 'react-pdf';
 
-
-export const getFileIcon = (fileName: string) => {
+export const getFileIcon = (fileName: string, size?: string) => {
+  size = size || 'w-4 h-4';
   switch (fileName.split('.').pop()?.toLowerCase()) {
   case 'zip':
   case 'rar':
   case '7z':
   case 'tar':
-    return <FileArchive className="w-4 h-4" />;
+    return <FileArchive className={size} />;
   case 'wav':
   case 'bwf':
   case 'ape':
@@ -21,16 +21,16 @@ export const getFileIcon = (fileName: string) => {
   case 'aac':
   case 'ogg':
   case 'opus':
-    return <FileAudio className="w-4 h-4" />;
+    return <FileAudio className={size} />;
   case 'xls':
   case 'xlsx':
-    return <FileSpreadsheet className="w-4 h-4" />;
+    return <FileSpreadsheet className={size} />;
   case 'ppt':
   case 'pptx':
-    return <FilePieChart className="w-4 h-4" />;
+    return <FilePieChart className={size} />;
   case 'doc':
   case 'docx':
-    return <FileType className="w-4 h-4" />;
+    return <FileType className={size} />;
   case 'bmp':
   case 'iff':
   case 'ilbm':
@@ -61,7 +61,7 @@ export const getFileIcon = (fileName: string) => {
   case 'dxf':
   case 'cgm':
   case 'ico':
-    return <FileImage className="w-4 h-4" />;
+    return <FileImage className={size} />;
   case 'flv':
   case 'avi':
   case 'wmv':
@@ -83,16 +83,24 @@ export const getFileIcon = (fileName: string) => {
   case 'oga':
   case 'mod':
   case 'webm':
-    return <FileVideo className="w-4 h-4" />;
+    return <FileVideo className={size} />;
   case 'pdf':
-    return <FileText className="w-4 h-4" />;
+    return <FileText className={size} />;
   case 'txt':
   case 'html':
-    return <FileCode className="w-4 h-4" />;
+    return <FileCode className={size} />;
   default:
-    return <File className="w-4 h-4" />;
+    return <File className={size} />;
   }
 }
+
+const RcDPlayer = dynamic(
+  () => import('rc-dplayer').then((mod) => mod.Player),
+  { 
+    ssr: false,
+    loading: () => <div className="w-full h-full flex items-center justify-center">加载中...</div>,
+  }
+);
 
 export function PreviewFile({ url }: { url: string }) {
   const ext = new URL(url).pathname.split('.').pop()?.toLowerCase();
@@ -123,13 +131,21 @@ export function PreviewFile({ url }: { url: string }) {
   case 'mp4':
   case 'webm':
   case 'm3u8':
-    return <JolPlayer option={
-      {
-        videoSrc: url,
-        videoType: ext === 'm3u8' ? 'hls' : 'h264',
-        autoPlay: true,
-      }
-    } />
+  case 'flv':
+    return <RcDPlayer
+      src={url}
+      options={{
+        autoplay: true,
+        screenshot: true,
+        hotkey: true,
+        preload: 'auto',
+        volume: 0.5,
+        mutex: true,
+        video: {
+          pic: '',
+        },
+      }}
+    />
   case 'mp3':
   case 'ogg':
   case 'wav':
