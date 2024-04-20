@@ -51,7 +51,7 @@ export default function HistoryPage() {
                 <div className="grid gap-4 p-0">
                   <div className="divide-y divide-gray-200 dark:divide-gray-800">
                     {
-                      historyFiles?.map((file, index) => (
+                      historyFiles.sort((a, b) => Number(b.id) - Number(a.id)).map((file, index) => (
                         <div key={index} className="flex items-center p-4 space-x-4">
                           {getFileIcon(file.name)}
                           <div className="flex-1 min-w-0">
@@ -100,7 +100,7 @@ export default function HistoryPage() {
               <ScrollArea className="h-[50vh]">
                 <div className="divide-y divide-gray-200 dark:divide-gray-800">
                   {
-                    historyCollections.map((collection, index) => (
+                    historyCollections.sort((a, b) => Number(b.id) - Number(a.id)).map((collection, index) => (
                       <div key={index} className="flex items-center p-4 space-x-4">
                         <div className="flex-1 min-w-0">
                           <div className="font-medium leading-none truncate">{truncate(collection.files.join('、'), 10)}</div>
