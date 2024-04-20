@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
+
+const withPWA = require('next-pwa')({
+    dest: 'public',
+    register: true,
+    skipWaiting: true,
+    disable: process.env.NODE_ENV === 'development',
+});
+
 const nextConfig = {
+    output: "export",
     webpack: (config) => {
         config.resolve.alias.canvas = false;
         // Important: return the modified config
@@ -9,6 +18,8 @@ const nextConfig = {
         });
         return config;
     },
+    reactStrictMode: true,
+    swcMinify: true,
 }
 
-export default nextConfig;
+module.exports = withPWA(nextConfig);
