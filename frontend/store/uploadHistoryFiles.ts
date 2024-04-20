@@ -15,7 +15,10 @@ const uploadHistoryFilesSlice = createSlice({
       state.push(action.payload)
     },
     removeFile: (state, action) => {
-      return state.filter(file => file.id !== action.payload.id)
+      const index = state.findIndex(file => file.id === action.payload)
+      if (index !== -1) {
+        state.splice(index, 1)
+      }
     }
   }
 })
