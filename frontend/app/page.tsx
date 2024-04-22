@@ -7,6 +7,7 @@ import FileViewer from "@/components/FileViewer";
 import Footer from "@/components/Footer";
 import ImageUploader from "@/components/ImageUploader";
 import Navbar from "@/components/Navbar";
+import TextUploader from "@/components/TextUploader";
 import { store, persistor } from "@/store";
 import { Provider } from "react-redux";
 import { Link, Route, HashRouter as Router, Routes } from "react-router-dom";
@@ -43,6 +44,7 @@ export default function Page() {
                 <Route path="/" element={<FileUploader />} />
                 <Route path="/feedback" element={<FeedbackPage />} />
                 <Route path="/image" element={<ImageUploader />} />
+                <Route path="/text" element={<TextUploader />} />
                 <Route path="/files/:id" element={<FileViewer />} />
                 <Route path="/collections/:id" element={<CollectionViewer />} />
               </Routes>

@@ -1,13 +1,20 @@
 'use client';
 
 import { Link } from 'react-router-dom';
-import { Folder, ImageIcon, MessageSquare } from 'lucide-react';
+import { Folder, ImageIcon, MessageSquare, NotepadText } from 'lucide-react';
 import SettingsDialog from './Settings';
 import HistoryPage from './History';
 
 export default function Navbar() {
   return (
     <nav className="flex ml-auto items-center gap-4 md:gap-6 lg:gap-8">
+      <Link
+        className="flex items-center gap-2 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+        to="/text"
+        title="上传文本"
+      >
+        <NotepadText className="h-6 w-6" />
+      </Link>
       <Link
         className="flex items-center gap-2 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
         to="/image"
