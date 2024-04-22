@@ -12,31 +12,38 @@ import {
 } from "@/components/ui/table";
 import { ImageUp, Loader2, ClipboardCopy } from "lucide-react"
 import React, { useEffect, useRef, useState } from "react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { uploadImage } from "@/lib/utils";
 
 
 export default function ImageUploader() {
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadResult, setUploadResult] = useState('');
   const [fileName, setFileName] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    handleUpload(e.dataTransfer.files[0]);
+    setImageFile(e.dataTransfer.files[0]);
+    setUploading(true);
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      handleUpload(e.target.files[0]);
+      setImageFile(e.target.files[0]);
+      setUploading(true);
     }
   }
 
-  const handleUpload = (imageFile: File) => {
-    setUploading(true);
+  const handleUpload = (turnstileToken: string) => {
+    if (!turnstileToken || !imageFile) {
+      return;
+    }
     setFileName(imageFile.name.replace(/\.[^/.]+$/, ""));
-    uploadImage(imageFile).then((url) => {
+    uploadImage(imageFile, turnstileToken).then((url) => {
       setUploading(false);
       setUploadResult(url);
     }).catch(() => {
@@ -51,7 +58,8 @@ export default function ImageUploader() {
       if (item.kind === 'file') {
         const file = item.getAsFile();
         if (file) {
-          handleUpload(file);
+          setImageFile(file);
+          setUploading(true);
         }
       }
     }
@@ -79,8 +87,21 @@ export default function ImageUploader() {
         uploading && !uploadResult && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-[80vw] mx-auto">
-              <Loader2 className="w-12 h-12 animate-spin text-primary" />
-              <span className="text-sm text-gray-500 dark:text-gray-400">正在上传</span>
+              {
+                turnstileToken ? (
+                  <>
+                    <Loader2 className="w-12 h-12 animate-spin text-primary" />
+                    <span className="text-sm text-gray-500 dark:text-gray-400">正在上传</span>
+                  </>
+                ) : (
+                  <Turnstile siteKey="0x4AAAAAAAXsCSm8dUb-JlES" onSuccess={
+                    (token) => {
+                      setTurnstileToken(token);
+                      handleUpload(token);
+                    }}
+                  />
+                )
+              }
             </div>
           </div>
         )
