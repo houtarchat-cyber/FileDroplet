@@ -145,28 +145,35 @@ export default function FileUploader() {
         </div>
       </div>
       {files.length > 0 && (
-        <><CardContent className="p-4">
-          <div className="grid grid-cols-2 gap-4">
-            {files.map((file, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                {getFileIcon(file.name, 'w-8 h-8')}
-                <div className="flex flex-col space-y-1.5">
-                  <span className="font-medium text-sm leading-none">{file.name}</span>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{(fileSize(file.size))}</span>
+        <>
+          <CardContent className="p-4">
+            <div className="grid grid-cols-2 gap-4">
+              {files.map((file, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  {getFileIcon(file.name, 'w-8 h-8')}
+                  <div className="flex flex-col space-y-1.5">
+                    <span className="font-medium text-sm leading-none">{file.name}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{(fileSize(file.size))}</span>
+                  </div>
+                  <Button className="ml-auto" size="sm" variant="ghost" onClick={() => handleDelete(index)}>
+                    <Trash className="w-4 h-4" />
+                    <span className="sr-only">删除</span>
+                  </Button>
                 </div>
-                <Button className="ml-auto" size="sm" variant="ghost" onClick={() => handleDelete(index)}>
-                  <Trash className="w-4 h-4" />
-                  <span className="sr-only">删除</span>
-                </Button>
-              </div>
-            ))}
-          </div>
-        </CardContent><div className="flex items-center justify-end p-4">
-          <Button size="sm" onClick={() => setUploading(true)}>
-            <Upload className="h-4 w-4 mr-2" />
+              ))}
+            </div>
+          </CardContent>
+          <div className="flex items-center justify-end p-4 gap-4">
+            <Button size="sm" variant="ghost" onClick={() => setFiles([])}>
+              <Trash className="w-4 h-4 mr-2" />
+              清空
+            </Button>
+            <Button size="sm" onClick={() => setUploading(true)}>
+              <Upload className="h-4 w-4 mr-2" />
               上传
-          </Button>
-        </div></>
+            </Button>
+          </div>
+        </>
       )}
       {
         uploading && (
@@ -239,7 +246,14 @@ export default function FileUploader() {
                       onClick={() => handlePagination('upload')}
                       disabled={turnstileToken === null}
                     >
-                    上传
+                      {
+                        turnstileToken === null ? (
+                          <div className="flex items-center space-x-2 gap-2">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            等待验证
+                          </div>
+                        ) : '上传'
+                      }
                     </Button>
                   </>
                 )}
