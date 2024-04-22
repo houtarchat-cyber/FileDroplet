@@ -15,6 +15,14 @@ export function getBackendUrl(path: string) {
   return store.getState().settings.backendUrl + path;
 }
 
+export function truncate(str: string, length: number) {
+  let { res, len } = str.split('').reduce(({ len, res }, char) => {
+    const charLen = char.charCodeAt(0) <= 0x007f ? 1 : 2;
+    return { len: len + charLen, res: len < length ? res + char : res };
+  }, { len: 0, res: '' });
+  return res + (len > length ? '...' : '');
+};
+
 export async function uploadFile(file: File, name: string, size: number, description: string, expire: string, password: string, turnstileToken: string) {
   const signature = await fetch(getBackendUrl('/api/oss/signature?turnstile_token=' + turnstileToken)).then(res => res.json());
   const formData = new FormData();
@@ -75,12 +83,12 @@ export async function uploadCollection(fileIds: number[]) {
   return [password, (await res.json()).id];
 }
 
-export async function uploadImage(imageFile: File) {
+export async function uploadImage(imageFile: File, turnstileToken: string) {
   if (!imageFile.type.startsWith('image/')) {
     alert('请上传图片文件');
     throw -1;
   }
-  const signature = await fetch(getBackendUrl('/api/oss/signature')).then(res => res.json());
+  const signature = await fetch(getBackendUrl('/api/oss/signature?turnstile_token=' + turnstileToken)).then(res => res.json());
   const formData = new FormData();
   formData.append('key', signature.dir + signature.key + imageFile.name);
   formData.append('policy', signature.policy);

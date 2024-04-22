@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Link } from 'react-router-dom';
 import { getFileIcon } from '@/lib/utils2';
-import { fileSize } from '@/lib/utils';
+import { fileSize, truncate } from '@/lib/utils';
 import { Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -17,14 +17,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDispatch } from 'react-redux';
 import { removeFile } from '@/store/uploadHistoryFiles';
 import { removeCollection } from "@/store/uploadHistoryCollections";
-
-const truncate = (str: string, length: number) => {
-  let { res, len } = str.split('').reduce(({ len, res }, char) => {
-    const charLen = char.charCodeAt(0) <= 0x007f ? 1 : 2;
-    return { len: len + charLen, res: len < length ? res + char : res };
-  }, { len: 0, res: '' });
-  return res + (len > length ? '...' : '');
-};
 
 export default function HistoryPage() {
   const historyFiles = useSelector((state: RootState) => state.uploadHistoryFiles)
@@ -51,7 +43,7 @@ export default function HistoryPage() {
                 <div className="grid gap-4 p-0">
                   <div className="divide-y divide-gray-200 dark:divide-gray-800">
                     {
-                      historyFiles.sort((a, b) => Number(b.id) - Number(a.id)).map((file, index) => (
+                      historyFiles.slice().sort((a, b) => Number(b.id) - Number(a.id)).map((file, index) => (
                         <div key={index} className="flex items-center p-4 space-x-4">
                           {getFileIcon(file.name)}
                           <div className="flex-1 min-w-0">
