@@ -25,6 +25,7 @@ app.add_middleware(
 load_dotenv()
 turnstile_secret = os.getenv("TURNSTILE_SECRET")
 
+
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -32,6 +33,15 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.get("/")
+def read_root():
+    return {
+        "timestamp": time.time(),
+        "code": 200,
+        "message": "Welcome to FileDroplet! Visit /docs for API documentation.",
+    }
 
 
 @app.post("/api/files", response_model=schemas.File)
@@ -69,9 +79,7 @@ def read_file(
 
 
 @app.get("/api/files/{file_id}/summary", response_model=schemas.FileSummary)
-def read_file_summary(
-    file_id: int, db: Session = Depends(get_db)
-):
+def read_file_summary(file_id: int, db: Session = Depends(get_db)):
     db_file = crud.get_file(db, file_id=file_id)
     if db_file is None:
         raise HTTPException(status_code=404, detail="File not found")
@@ -166,7 +174,7 @@ def get_oss_signature(turnstile_token: str = None):
     )
     if not response.json()["success"]:
         raise HTTPException(status_code=403, detail=response.json()["error-codes"])
-    
+
     return generate_signature()
 
 
