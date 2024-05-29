@@ -32,13 +32,16 @@ export async function uploadFile(file: File, name: string, size: number, descrip
   formData.append('signature', signature.signature);
   formData.append('Content-Disposition', `attachment; filename="${name}"`);
   formData.append('file', file);
-  await fetch(signature.host, {
+  const { ok } = await fetch(signature.host, {
     body: formData,
     headers: {
       'x-oss-object-acl': 'public-read',
     },
     method: 'POST',
   });
+  if (!ok) {
+    throw new Error('上传失败');
+  }
   const fileInfo = {
     file_name: name,
     size: size,
