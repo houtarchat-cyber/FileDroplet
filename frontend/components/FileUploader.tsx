@@ -238,9 +238,14 @@ export default function FileUploader() {
                 )}
                 {uploadIndex === files.length - 1 && (
                   <>
-                    <Turnstile siteKey="0x4AAAAAAAXsCSm8dUb-JlES" onSuccess={
-                      (token) => setTurnstileToken(token)
-                    } />
+                    <Turnstile siteKey="0x4AAAAAAAXsCSm8dUb-JlES"
+                      onSuccess={
+                        (token) => setTurnstileToken(token)
+                      }
+                      options={{
+                        size: 'compact',
+                        theme: 'light',
+                      }}/>
                     <Button
                       size="sm"
                       onClick={() => handlePagination('upload')}

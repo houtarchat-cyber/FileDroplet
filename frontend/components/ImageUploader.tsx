@@ -94,10 +94,15 @@ export default function ImageUploader() {
                     <span className="text-sm text-gray-500 dark:text-gray-400">正在上传</span>
                   </>
                 ) : (
-                  <Turnstile siteKey="0x4AAAAAAAXsCSm8dUb-JlES" onSuccess={
-                    (token) => {
-                      setTurnstileToken(token);
-                      handleUpload(token);
+                  <Turnstile siteKey="0x4AAAAAAAXsCSm8dUb-JlES"
+                    onSuccess={
+                      (token) => {
+                        setTurnstileToken(token);
+                        handleUpload(token);
+                      }}
+                    options={{
+                      size: 'compact',
+                      theme: 'light',
                     }}
                   />
                 )

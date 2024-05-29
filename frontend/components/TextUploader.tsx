@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Trash, Upload } from "lucide-react"
+import { Loader2, Trash, Upload } from "lucide-react";
 import React, { useState } from "react";
 import { uploadFile, truncate, IdEncoder } from "@/lib/utils";
 import { addFile } from "@/store/uploadHistoryFiles"
@@ -91,10 +91,15 @@ export default function TextUploader() {
                     <span className="text-sm text-gray-500 dark:text-gray-400">正在上传</span>
                   </>
                 ) : (
-                  <Turnstile siteKey="0x4AAAAAAAXsCSm8dUb-JlES" onSuccess={
-                    (token) => {
-                      setTurnstileToken(token);
-                      handleUpload(token);
+                  <Turnstile siteKey="0x4AAAAAAAXsCSm8dUb-JlES"
+                    onSuccess={
+                      (token) => {
+                        setTurnstileToken(token);
+                        handleUpload(token);
+                      }}
+                    options={{
+                      size: 'compact',
+                      theme: 'light',
                     }}
                   />
                 )
