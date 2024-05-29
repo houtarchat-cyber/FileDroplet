@@ -23,6 +23,37 @@ export function truncate(str: string, length: number) {
   return res + (len > length ? '...' : '');
 };
 
+export class IdEncoder {
+  private static table = 'fod9m21ykr6zqiveah8bt4xspn7j53guwc';
+  private static tr = Array.from(this.table).reduce((acc, char, index) => ({ ...acc, [char]: index }), {} as Record<string, number>);
+  private static s = [2, 0, 4, 1, 3];
+  private static xor = 177451812;
+  private static add = 8728348608;
+
+  static encodeId(id: number) {
+    if (id >= Math.pow(32, 5)) {
+      return id.toString();
+    }
+    id = (id ^ this.xor) + this.add;
+    let r = Array(5).fill('f');
+    for (let i = 0; i < 5; i++) {
+      r[this.s[i]] = this.table[Math.floor(id / Math.pow(32, i) % 32)];
+    }
+    return r.join('');
+  }
+
+  static decodeId(id: string) {
+    if (id.length !== 5) {
+      return parseInt(id) || 0;
+    }
+    let r = 0;
+    for (let i = 0; i < 5; i++) {
+      r += this.tr[id[this.s[i]]] * Math.pow(32, i);
+    }
+    return ((r - this.add) ^ this.xor) + 234881024;
+  }
+}
+
 export async function uploadFile(file: File, name: string, size: number, description: string, expire: string, password: string, turnstileToken: string) {
   const signature = await fetch(getBackendUrl('/api/oss/signature?turnstile_token=' + turnstileToken)).then(res => res.json());
   const formData = new FormData();
