@@ -172,7 +172,7 @@ def get_oss_signature(turnstile_token: str = None):
             "response": turnstile_token,
         },
     )
-    if not response.json()["success"]:
+    if not response.json()["success"] and response.json()["error-codes"] != ["timeout-or-duplicate"]:
         raise HTTPException(status_code=403, detail=response.json()["error-codes"])
 
     return generate_signature()
