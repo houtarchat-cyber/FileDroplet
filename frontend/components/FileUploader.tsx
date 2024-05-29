@@ -18,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { UploadCloud, Trash, Upload, Loader2 } from "lucide-react"
+import { Link } from 'react-router-dom';
 import { Turnstile } from "@marsidev/react-turnstile"
 import { getFileIcon } from "@/lib/utils2";
 import React, { useEffect, useRef, useState } from "react";
@@ -142,6 +143,9 @@ export default function FileUploader() {
               () => fileInputRef.current?.click()
             }>选择文件</Button>
           </Label>
+          <Button size="sm" variant="outline" asChild>
+            <Link to="/retrieve" title="取件">取件</Link>
+          </Button>
         </div>
       </div>
       {files.length > 0 && (

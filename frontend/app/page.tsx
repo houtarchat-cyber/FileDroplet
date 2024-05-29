@@ -2,6 +2,7 @@
 
 import CollectionViewer from "@/components/CollectionViewer";
 import FeedbackPage from "@/components/Feedback";
+import RetrievePage from "@/components/Retrieve";
 import FileUploader from "@/components/FileUploader";
 import FileViewer from "@/components/FileViewer";
 import Footer from "@/components/Footer";
@@ -43,6 +44,7 @@ export default function Page() {
               <Routes>
                 <Route path="/" element={<FileUploader />} />
                 <Route path="/feedback" element={<FeedbackPage />} />
+                <Route path="/retrieve" element={<RetrievePage />} />
                 <Route path="/image" element={<ImageUploader />} />
                 <Route path="/text" element={<TextUploader />} />
                 <Route path="/files/:id" element={<FileViewer />} />
