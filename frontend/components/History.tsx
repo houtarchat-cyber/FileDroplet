@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Link } from 'react-router-dom';
 import { getFileIcon } from '@/lib/utils2';
-import { fileSize, truncate } from '@/lib/utils';
+import { fileSize, truncate, IdEncoder } from '@/lib/utils';
 import { Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -60,10 +60,10 @@ export default function HistoryPage() {
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm text-gray-500 dark:text-gray-400">访问链接：</span>
                                 <a
-                                  href={`${location.origin}/#/files/${file.id}`}
+                                  href={`${location.origin}/#/files/${IdEncoder.encodeId(Number(file.id))}`}
                                   className="text-sm font-semibold text-primary"
                                 >
-                                  {`${location.origin}/#/files/${file.id}`}
+                                  {`${location.origin}/#/files/${IdEncoder.encodeId(Number(file.id))}`}
                                 </a>
                               </div>
                               {
@@ -109,10 +109,10 @@ export default function HistoryPage() {
                             <div className="flex items-center space-x-2">
                               <span className="text-sm text-gray-500 dark:text-gray-400">访问链接：</span>
                               <a
-                                href={`${location.origin}/#/collections/${collection.id}`}
+                                href={`${location.origin}/#/collections/${IdEncoder.encodeId(Number(collection.id))}`}
                                 className="text-sm font-semibold text-primary"
                               >
-                                {`${location.origin}/#/collections/${collection.id}`}
+                                {`${location.origin}/#/collections/${IdEncoder.encodeId(Number(collection.id))}`}
                               </a>
                             </div>
                             <div className="flex items-center space-x-2 mt-2">

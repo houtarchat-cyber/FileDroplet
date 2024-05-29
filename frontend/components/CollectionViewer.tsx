@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useState } from "react";
 import { getFileIcon } from "@/lib/utils2";
 import { Eye } from "lucide-react";
-import { fileSize, getBackendUrl } from "@/lib/utils";
+import { fileSize, getBackendUrl, IdEncoder } from "@/lib/utils";
 
 
 export default function CollectionViewer() {
@@ -22,7 +22,7 @@ export default function CollectionViewer() {
   })
 
   const getCollectionInformation = async () => {
-    const collectionId = window.location.hash.split("/")[2]
+    const collectionId = IdEncoder.decodeId(window.location.hash.split("/")[2])
     const response = await fetch(getBackendUrl("/api/collections/" + collectionId), {
       headers: {
         "Access-Password": auth.authCode
@@ -83,7 +83,7 @@ export default function CollectionViewer() {
                   {getFileIcon(file.file_name)}
                   <div className="flex-1 min-w-0">
                     <div className="font-medium leading-none truncate">{file.file_name}</div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">#{file.id} · {file.file_name.split('.').pop()?.toUpperCase()} · {fileSize(file.size)}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">#{IdEncoder.encodeId(file.id)} · {file.file_name.split('.').pop()?.toUpperCase()} · {fileSize(file.size)}</div>
                   </div>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -96,10 +96,10 @@ export default function CollectionViewer() {
                       <div className="flex items-center space-x-2">
                         <span className="text-sm text-gray-500 dark:text-gray-400">访问链接：</span>
                         <a
-                          href={`${location.origin}/#/files/${file.id}`}
+                          href={`${location.origin}/#/files/${IdEncoder.encodeId(file.id)}`}
                           className="text-sm font-semibold text-primary"
                         >
-                          {`${location.origin}/#/files/${file.id}`}
+                          {`${location.origin}/#/files/${IdEncoder.encodeId(file.id)}`}
                         </a>
                       </div>
                     </PopoverContent>

@@ -21,7 +21,7 @@ import { UploadCloud, Trash, Upload, Loader2 } from "lucide-react"
 import { Turnstile } from "@marsidev/react-turnstile"
 import { getFileIcon } from "@/lib/utils2";
 import React, { useEffect, useRef, useState } from "react";
-import { uploadCollection, uploadFile, fileSize } from "@/lib/utils";
+import { uploadCollection, uploadFile, fileSize, IdEncoder } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { addFile } from "@/store/uploadHistoryFiles";
 import { addCollection } from "@/store/uploadHistoryCollections";
@@ -294,10 +294,10 @@ export default function FileUploader() {
                     <div className="flex items-center space-x-2 mt-4">
                       <span className="text-sm text-gray-500 dark:text-gray-400">访问链接：</span>
                       <a
-                        href={`${location.origin}/#/collections/${collectionInfo.id}`}
+                        href={`${location.origin}/#/collections/${IdEncoder.encodeId(collectionInfo.id)}`}
                         className="text-sm font-semibold text-primary"
                       >
-                        {`${location.origin}/#/collections/${collectionInfo.id}`}
+                        {`${location.origin}/#/collections/${IdEncoder.encodeId(collectionInfo.id)}`}
                       </a>
                     </div>
                   </div>
@@ -308,7 +308,7 @@ export default function FileUploader() {
                   <TableBody>
                     {files.map((_, index) => (
                       <TableRow key={index}>
-                        <TableCell>文件 ID: {fileIds[index]}</TableCell>
+                        <TableCell>文件 ID: {IdEncoder.encodeId(fileIds[index])}</TableCell>
                         <TableCell>{filesInfo[index].name}</TableCell>
                         <TableCell>
                           <Popover>
@@ -319,10 +319,10 @@ export default function FileUploader() {
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm text-gray-500 dark:text-gray-400">访问链接：</span>
                                 <a
-                                  href={`${location.origin}/#/files/${fileIds[index]}`}
+                                  href={`${location.origin}/#/files/${IdEncoder.encodeId(fileIds[index])}`}
                                   className="text-sm font-semibold text-primary"
                                 >
-                                  {`${location.origin}/#/files/${fileIds[index]}`}
+                                  {`${location.origin}/#/files/${IdEncoder.encodeId(fileIds[index])}`}
                                 </a>
                               </div>
                               {

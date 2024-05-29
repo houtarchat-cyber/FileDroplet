@@ -11,7 +11,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Trash, Upload } from "lucide-react"
 import React, { useState } from "react";
-import { uploadFile, truncate } from "@/lib/utils";
+import { uploadFile, truncate, IdEncoder } from "@/lib/utils";
 import { addFile } from "@/store/uploadHistoryFiles"
 import { useDispatch } from "react-redux";
 import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
@@ -114,7 +114,7 @@ export default function TextUploader() {
                 <Table>
                   <TableBody>
                     <TableRow>
-                      <TableCell>文件 ID: {uploadResult}</TableCell>
+                      <TableCell>文件 ID: {IdEncoder.encodeId(uploadResult)}</TableCell>
                       <TableCell>
                         <Popover>
                           <PopoverTrigger>
@@ -124,10 +124,10 @@ export default function TextUploader() {
                             <div className="flex items-center space-x-2">
                               <span className="text-sm text-gray-500 dark:text-gray-400">访问链接：</span>
                               <a
-                                href={`${location.origin}/#/files/${uploadResult}`}
+                                href={`${location.origin}/#/files/${IdEncoder.encodeId(uploadResult)}`}
                                 className="text-sm font-semibold text-primary"
                               >
-                                {`${location.origin}/#/files/${uploadResult}`}
+                                {`${location.origin}/#/files/${IdEncoder.encodeId(uploadResult)}`}
                               </a>
                             </div>
                           </PopoverContent>

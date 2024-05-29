@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fileSize, getBackendUrl } from "@/lib/utils";
+import { fileSize, getBackendUrl, IdEncoder } from "@/lib/utils";
 import { getFileIcon, PreviewFile } from "@/lib/utils2";
 import { ClipboardCopy, Download, Eye, FileClock, LinkIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -31,7 +31,7 @@ export default function FileViewer() {
   })
 
   const getFileInformation = async (first?: boolean) => {
-    const fileId = window.location.hash.split("/")[2]
+    const fileId = IdEncoder.decodeId(window.location.hash.split("/")[2])
     const response = await fetch(getBackendUrl(`/api/files/${fileId}`), {
       headers: auth.authCode ? {
         "Access-Password": auth.authCode
